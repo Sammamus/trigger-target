@@ -38,4 +38,4 @@
             python-version: '3.11'
 
         - name: 'Python - Hello World'
-          run: python helloWorld.py ${{ needs.varableCollections.outputs.target_argument }}
+          run: python helloWorld.py "${{ needs.varableCollections.outputs.target_argument }}"
