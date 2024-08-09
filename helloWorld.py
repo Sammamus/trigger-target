@@ -14,7 +14,7 @@ def sleeper():
 def main(name):
     try:
         print(f"Hello {name}!")
-        time.sleep(sleep_timer)
+        sleeper()
         exit(0)
     except Exception as e:
         print(e)
