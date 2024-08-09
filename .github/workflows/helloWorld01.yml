@@ -1,7 +1,7 @@
 name: 'Testing trigger target 01'
 on:
   repository_dispatch:
-    types: [trigger-workflow01]
+    types: [completely-different-name]
 
 jobs:
   variableCollections:
