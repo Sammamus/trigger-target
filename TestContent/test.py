@@ -88,7 +88,7 @@ def get_data(event_type, arguement):
         "event_type": event_type,
         "client_payload": {
             "target_branch": branch,
-            "target_repository": repo,
+            "target_repository": f"{owner}/{repo}",
             "target_argument": arguement
         }
     }
