@@ -2,7 +2,7 @@ import sys
 import time
 
 # Global
-sleep_timer = 60
+sleep_timer = 600
 
 
 def sleeper():
