@@ -21,14 +21,16 @@
             
 
     target:
+      needs: [variableCollections]
+      if: needs.variableCollections.result == 'success'
       runs-on: ubuntu-latest
 
       steps:
         - name: 'Checkout Code'
           uses: 'actions/checkout@v4'
           with:
-            repository: ${{ jobs.variableCollections.outputs.target_repository }}
-            ref: ${{ jobs.variableCollections.outputs.target_branch }}
+            repository: ${{ needs.variableCollections.outputs.target_repository }}
+            ref: ${{ needs.variableCollections.outputs.target_branch }}
 
         - name: 'Setup Python'
           uses: 'actions/setup-python@v5'
@@ -36,4 +38,4 @@
             python-version: '3.11'
 
         - name: 'Python - Hello World'
-          run: python helloWorld.py ${{ jobs.varableCollections.outputs.target_argument }}
+          run: python helloWorld.py ${{ needs.varableCollections.outputs.target_argument }}

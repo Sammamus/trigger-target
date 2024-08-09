@@ -21,17 +21,19 @@ jobs:
   
 
   target:
+    needs: [ variableCollections ]
+    if: needs.variableCollections.result == 'success'
     runs-on: ubuntu-latest
 
     steps:
       - name: 'Checkout Code'
         uses: 'actions/checkout@v4'
         with:
-          repository: ${{ jobs.variableCollections.outputs.target_repository }}
-          ref: ${{ jobs.variableCollections.outputs.target_branch }}
+          repository: ${{ needs.variableCollections.outputs.target_repository }}
+          ref: ${{ needs.variableCollections.outputs.target_branch }}
 
       - name: 'Bash - Echo'
         shell: bash
         run: |
-          echo "Hello ${{ jobs.variableCollestions.outputs.target_argument }}. This is Bash!"
+          echo "Hello ${{ needs.variableCollestions.outputs.target_argument }}. This is Bash!"
           cat simple-test.txt
