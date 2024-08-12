@@ -1,36 +1,47 @@
   name: 'Testing trigger target'
+  run-name: ${{ inputs.target_argument }}
   on:
-    repository_dispatch:
-      types: [trigger-workflow]
+    workflow_dispatch:
+      inputs:
+        target_repository:
+          required: true
+          description: 'Target Repository'
+        target_branch:
+          required: true
+          description: 'Target Branch'
+        target_argument:
+          required: false
+          description: 'Target Argument to be passed.'
+          default: 'Bossman9000'
 
   jobs:
-    variableCollections:
-      runs-on: ubuntu-latest
-      outputs:
-        target_repository: ${{ steps.variableExtraction.outputs.TARGET_REPOSITORY }}
-        target_branch: ${{ steps.variableExtraction.outputs.TARGET_BRANCH }}
-        target_argument: ${{ steps.variableExtraction.outputs.TARGET_ARGUMENT }}
-
-      steps:
-        - name: 'Variable Extraction'
-          id: 'variableExtraction'
-          run: |
-            echo "TARGET_BRANCH=${{ github.event.client_payload.target_branch }}" >> "$GITHUB_OUTPUT"
-            echo "TARGET_REPOSITORY=${{ github.event.client_payload.target_repository }}" >> "$GITHUB_OUTPUT"
-            echo "TARGET_ARGUMENT=${{ github.event.client_payload.target_argument }}" >> "$GITHUB_OUTPUT"
+#    variableCollections:
+#      runs-on: ubuntu-latest
+#      outputs:
+#        target_repository: ${{ steps.variableExtraction.outputs.TARGET_REPOSITORY }}
+#        target_branch: ${{ steps.variableExtraction.outputs.TARGET_BRANCH }}
+#        target_argument: ${{ steps.variableExtraction.outputs.TARGET_ARGUMENT }}
+#
+#      steps:
+#        - name: 'Variable Extraction'
+#          id: 'variableExtraction'
+#          run: |
+#            echo "TARGET_BRANCH=${{ github.event.client_payload.target_branch }}" >> "$GITHUB_OUTPUT"
+#            echo "TARGET_REPOSITORY=${{ github.event.client_payload.target_repository }}" >> "$GITHUB_OUTPUT"
+#            echo "TARGET_ARGUMENT=${{ github.event.client_payload.target_argument }}" >> "$GITHUB_OUTPUT"
             
 
     target:
-      needs: [variableCollections]
-      if: needs.variableCollections.result == 'success'
+#      needs: [variableCollections]
+#      if: needs.variableCollections.result == 'success'
       runs-on: ubuntu-latest
 
       steps:
         - name: 'Checkout Code'
           uses: 'actions/checkout@v4'
           with:
-            repository: ${{ needs.variableCollections.outputs.target_repository }}
-            ref: ${{ needs.variableCollections.outputs.target_branch }}
+            repository: ${{ inputs.target_repository }}
+            ref: ${{ inputs.target_branch }}
 
         - name: 'Setup Python'
           uses: 'actions/setup-python@v5'
@@ -38,4 +49,4 @@
             python-version: '3.11'
 
         - name: 'Python - Hello World'
-          run: python helloWorld.py ${{ needs.variableCollections.outputs.target_argument }}
+          run: python helloWorld.py ${{ inputs.target_argument }}
