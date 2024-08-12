@@ -47,4 +47,4 @@ jobs:
         run: |
           echo "Hello ${{ inputs.target_argument }}. This is Bash!"
           ls -lah
-          cat simple-test.txt
+          cat ./simple-test.txt
