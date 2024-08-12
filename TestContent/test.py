@@ -86,8 +86,8 @@ def get_headers():
 
 def get_data(argument):
     return {
-        "event_type": event_type,
-        "client_payload": {
+        "ref": branch,
+        "inputs": {
             "target_branch": branch,
             "target_repository": f"{owner}/{repo}",
             "target_argument": argument
@@ -116,7 +116,8 @@ def set_workflows():
         response = resp.json()
 
         for w in response['workflows']:
-            workflows.append({w['name']: w['id']})
+            file = w['path'].split('/')[-1]
+            workflows.append({'name': w['name'], 'id': w['id'], 'file': file})
 
     elif resp.status > 399:
         print(resp.data)
@@ -156,7 +157,7 @@ def call_dispatch():
     http = create_client()
     workflow_id = select_workflow()
     set_branch()
-    set_event_type()
+    # set_event_type()
 
     argument = input("Enter the argument you wish to send to GitHub: ")
 
