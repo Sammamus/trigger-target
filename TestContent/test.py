@@ -293,7 +293,10 @@ def call_dispatch():
 
 def main():
     try:
+        global workflow_found
+
         user_response = ""
+
         print("\n--- Welcome to Github Trigger Workflow Testing ---\n")
         set_owner()
         set_repo()
@@ -302,6 +305,7 @@ def main():
         quit = ["q", "quit", "n", "no"]
 
         while(user_response.lower() not in quit):
+            workflow_found = False
             call_dispatch()
             time.sleep(30)
             list_workflow_runs()
