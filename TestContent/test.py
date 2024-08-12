@@ -1,4 +1,6 @@
+import json
 import os
+import time
 import urllib3
 
 # Globals
@@ -86,7 +88,7 @@ def get_headers():
 
 def get_data(argument):
     return {
-        "ref": branch,
+        "ref": "main",
         "inputs": {
             "target_branch": branch,
             "target_repository": f"{owner}/{repo}",
@@ -142,15 +144,44 @@ def select_workflow():
 
         match workflow:
             case 0:
-                output = workflows[0]['id']
+                output = workflows[0]['file']
                 break
             case 1:
-                output = workflows[1]['id']
+                output = workflows[1]['file']
                 break
             case _:
                 print("Invalid input")
 
     return output
+
+
+def list_workflow_runs():
+    http = create_client()
+
+    resp = http.request(
+        "GET",
+        f"https://api.github.com/repos/{owner}/{repo}/actions/runs?status=pending&status=waiting&status=requested",
+        headers=get_headers()
+    )
+    if resp.status == 200:
+        print("Successfully fetched workflow runs")
+        print(resp.data)
+
+        response = resp.json()
+
+        print(json.dumps(response, indent=2))
+
+        # for w in response['workflows']:
+        #     file = w['path'].split('/')[-1]
+        #     workflows.append({'name': w['name'], 'id': w['id'], 'file': file})
+
+    elif resp.status > 399:
+        print(resp.data)
+        raise Exception(resp.status)
+    else:
+        print("Failed to fetch workflows")
+        print(resp.status)
+        print(resp.data)
 
 
 def call_dispatch():
@@ -192,6 +223,8 @@ def main():
 
         while(user_response.lower() not in quit):
             call_dispatch()
+            time.sleep(30)
+            list_workflow_runs()
 
             user_response = input ("\nWould you like to continue? [y/n]: ")
 

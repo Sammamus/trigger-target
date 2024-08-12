@@ -1,4 +1,5 @@
   name: 'Testing trigger target'
+  run-name: ${{ inputs.target_argument }}
   on:
     workflow_dispatch:
       inputs:
